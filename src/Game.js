@@ -14,13 +14,10 @@ var Game = (function () {
 
         this.cursors = phaser.input.keyboard.createCursorKeys();
 
-        this.tile = phaser.add.sprite(0, 0, 'ground-atlas', 'sprite1');
-        this.tile.width = 40;
-        this.tile.height = 40;
-
-        this.tile1 = phaser.add.sprite(40, 0, 'ground-atlas', 'sprite2');
-        this.tile1.width = 40;
-        this.tile1.height = 40;
+        this.map = phaser.add.tilemap('map1');
+        this.map.addTilesetImage('ground-tileset', 'ground-tileset');
+        this.layer1 = this.map.createLayer('Layer1');
+        this.layer2 = this.map.createLayer('Layer2');
 
         var previous_mouse_pos = null;
         phaser.input.mouse.onMouseMove = function (evt) {
@@ -53,6 +50,7 @@ var Game = (function () {
         // TODO: Linear interpolation
         if (this.cursors.up.isDown) {
             phaser.camera.y -= cameraSpeed * elapsedTime;
+            console.log("toto");
         }
         else if (this.cursors.down.isDown) {
             phaser.camera.y += cameraSpeed * elapsedTime;

@@ -1,0 +1,53 @@
+{ "height":10,
+ "layers":[
+        {
+         "data":[0, 1, 2, 2, 2, 2, 2, 2, 2, 64, 0, 9, 11, 11, 11, 11, 11, 11, 11, 23, 0, 9, 11, 11, 11, 11, 11, 11, 11, 23, 0, 9, 11, 11, 83, 84, 11, 11, 11, 23, 0, 9, 11, 11, 91, 92, 11, 11, 11, 23, 0, 9, 11, 11, 11, 11, 11, 11, 11, 23, 0, 9, 11, 11, 11, 11, 11, 11, 11, 23, 0, 9, 11, 11, 11, 11, 11, 11, 11, 23, 0, 70, 71, 71, 71, 71, 71, 71, 71, 72, 0, 78, 79, 79, 79, 79, 79, 79, 79, 80],
+         "height":10,
+         "name":"Layer1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 135, 136, 0, 0, 0, 0, 0, 0, 0, 0, 143, 144, 0, 0, 0, 0, 0, 0, 0, 0, 151, 152, 0, 0, 0, 0, 0, 0, 0, 0, 159, 160, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":10,
+         "name":"Layer2",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "properties":
+    {
+
+    },
+ "renderorder":"left-up",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "image":"..\/image\/ground-tileset.png",
+         "imageheight":704,
+         "imagewidth":256,
+         "margin":0,
+         "name":"ground-tileset",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tileheight":32,
+         "tilewidth":32,
+         "transparentcolor":"#5c909c"
+        }],
+ "tilewidth":32,
+ "version":1,
+ "width":10
+}
