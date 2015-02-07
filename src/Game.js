@@ -20,23 +20,18 @@ var Game = (function () {
         this.layer2 = this.map.createLayer('Layer2');
 
         var previous_mouse_pos = null;
+        var mouse_sensitivity = 30;
         phaser.input.mouse.onMouseMove = function (evt) {
+            if (phaser.input.mousePointer.isUp)
+                previous_mouse_pos = null;
             if (phaser.input.mousePointer.isDown) {
                 if (previous_mouse_pos == null)
                     previous_mouse_pos = evt;
                 var dx = evt.x - previous_mouse_pos.x;
                 var dy = evt.y - previous_mouse_pos.y;
-                if (dx > 5)
-                    dx = 5;
-                if (dx < -5)
-                    dx = -5;
-                if (dy > 5)
-                    dy = 5;
-                if (dy < -5)
-                    dy = -5;
                 previous_mouse_pos = evt;
-                phaser.camera.x -= dx * phaser.time.elapsed * 0.04;
-                phaser.camera.y -= dy * phaser.time.elapsed * 0.04;       
+                phaser.camera.x -= dx * mouse_sensitivity * phaser.time.physicsElapsed;
+                phaser.camera.y -= dy * mouse_sensitivity * phaser.time.physicsElapsed;       
             }
 
         };
