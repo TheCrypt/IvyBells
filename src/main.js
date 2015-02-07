@@ -8,7 +8,10 @@ var game = new Game();
 function preload() {
     // Load assets
     // Atlas Texture tool : http://www.leshylabs.com/apps/sstool/
-    phaser.load.atlasJSONHash('ground-atlas', "asset/image/ground-tileset.png", "asset/image/ground-tileset.json");
+    phaser.load.tilemap('map1', 'asset/map/map1.json', null, Phaser.Tilemap.TILED_JSON);
+    phaser.load.image('ground-tileset', "asset/image/ground-tileset.png");
+   // phaser.load.tilesets()
+//    phaser.load.atlasJSONHash('ground-tileset', "asset/image/ground-tileset.png", "asset/image/ground-tileset.json");
 }
 
 function create() {
