@@ -2,6 +2,8 @@
  * Created by Nicolas on 07/02/2015.
  */
 
+"use strict";
+
 var Game = (function () {
     
     function Game() {
@@ -25,7 +27,7 @@ var Game = (function () {
         this.layer2 = this.map.createLayer('Layer2');
 
 
-        this.player = phaser.add.sprite(48, 48, 'player', 1);
+        this.player = phaser.add.sprite(900, 900, 'player', 1);
         this.player.animations.add('left', [8,9], 10, true);
         this.player.animations.add('right', [1,2], 10, true);
         this.player.animations.add('up', [11,12,13], 10, true);
