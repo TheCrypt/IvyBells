@@ -3,10 +3,12 @@
  */
 
 
-function Map() {
-}
+var Map = (function () {
+	function Map() {
+	}
 
-Map.prototype.generateMap = function(sizeX, sizeY) {
+	Map.prototype.generateMap = function(sizeX, sizeY) {
 
-}
-
+	}
+	return Map;
+})();
