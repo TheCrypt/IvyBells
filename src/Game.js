@@ -10,11 +10,15 @@ var Game = (function () {
 
     Game.prototype.initialize = function() {
         // Define world size
-        phaser.world.setBounds(-600, -700, 2000, 2000);
+        phaser.world.setBounds(0, 0, 1900, 1900);
 
         this.cursors = phaser.input.keyboard.createCursorKeys();
 
-        this.map = phaser.add.tilemap('map1');
+        phaser.camera.x = 600;
+        phaser.camera.y = 700;
+
+
+        this.map = phaser.add.tilemap('map2');
         this.map.addTilesetImage('ground-tileset', 'ground-tileset');
         this.layer1 = this.map.createLayer('Layer1');
         this.layer2 = this.map.createLayer('Layer2');
@@ -45,7 +49,6 @@ var Game = (function () {
         // TODO: Linear interpolation
         if (this.cursors.up.isDown) {
             phaser.camera.y -= cameraSpeed * elapsedTime;
-            console.log("toto");
         }
         else if (this.cursors.down.isDown) {
             phaser.camera.y += cameraSpeed * elapsedTime;
