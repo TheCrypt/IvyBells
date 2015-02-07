@@ -6,6 +6,7 @@ var Game = (function () {
     
     function Game() {
         this.cursors;
+
     }
 
     Game.prototype.initialize = function() {
@@ -22,6 +23,17 @@ var Game = (function () {
         this.map.addTilesetImage('ground-tileset', 'ground-tileset');
         this.layer1 = this.map.createLayer('Layer1');
         this.layer2 = this.map.createLayer('Layer2');
+
+
+        this.player = phaser.add.sprite(48, 48, 'player', 1);
+        this.player.animations.add('left', [8,9], 10, true);
+        this.player.animations.add('right', [1,2], 10, true);
+        this.player.animations.add('up', [11,12,13], 10, true);
+        this.player.animations.add('down', [4,5,6], 10, true);
+
+        phaser.physics.enable(this.player, Phaser.Physics.ARCADE);
+
+        this.player.body.setSize(10, 14, 2, 1);
 
         var previous_mouse_pos = null;
         var mouse_sensitivity = 30;
@@ -47,17 +59,26 @@ var Game = (function () {
         var elapsedTime = phaser.time.elapsed;
 
         // TODO: Linear interpolation
-        if (this.cursors.up.isDown) {
-            phaser.camera.y -= cameraSpeed * elapsedTime;
-        }
-        else if (this.cursors.down.isDown) {
-            phaser.camera.y += cameraSpeed * elapsedTime;
-        }
+        this.player.body.velocity.set(0);
+
         if (this.cursors.left.isDown) {
-            phaser.camera.x -= cameraSpeed * elapsedTime;
+            this.player.body.velocity.x = -100;
+            this.player.play('left');
         }
         else if (this.cursors.right.isDown) {
-            phaser.camera.x += cameraSpeed * elapsedTime;
+            this.player.body.velocity.x = 100;
+            this.player.play('right');
+        }
+        else if (this.cursors.up.isDown) {
+            this.player.body.velocity.y = -100;
+            this.player.play('up');
+        }
+        else if (this.cursors.down.isDown) {
+            this.player.body.velocity.y = 100;
+            this.player.play('down');
+        }
+        else {
+            this.player.animations.stop();
         }
     };
 
