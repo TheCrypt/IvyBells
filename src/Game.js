@@ -2,6 +2,8 @@
  * Created by Nicolas on 07/02/2015.
  */
 
+"use strict";
+
 var Game = (function () {
     
     function Game() {
@@ -11,18 +13,21 @@ var Game = (function () {
 
     Game.prototype.initialize = function() {
         // Define world size
-        phaser.world.setBounds(-600, -700, 2000, 2000);
+        phaser.world.setBounds(0, 0, 1900, 1900);
 
         this.cursors = phaser.input.keyboard.createCursorKeys();
 
-        this.map = phaser.add.tilemap('map1');
+        phaser.camera.x = 600;
+        phaser.camera.y = 700;
+
+
+        this.map = phaser.add.tilemap('map2');
         this.map.addTilesetImage('ground-tileset', 'ground-tileset');
         this.layer1 = this.map.createLayer('Layer1');
         this.layer2 = this.map.createLayer('Layer2');
 
 
-        this.player = phaser.add.sprite(48, 48, 'player', 1);
-        this.player = phaser.add.sprite(48, 48, 'player', 1);
+        this.player = phaser.add.sprite(900, 900, 'player', 1);
         this.player.animations.add('left', [8,9], 10, true);
         this.player.animations.add('right', [1,2], 10, true);
         this.player.animations.add('up', [11,12,13], 10, true);
@@ -58,28 +63,23 @@ var Game = (function () {
         // TODO: Linear interpolation
         this.player.body.velocity.set(0);
 
-        if (this.cursors.left.isDown)
-        {
+        if (this.cursors.left.isDown) {
             this.player.body.velocity.x = -100;
             this.player.play('left');
         }
-        else if (this.cursors.right.isDown)
-        {
+        else if (this.cursors.right.isDown) {
             this.player.body.velocity.x = 100;
             this.player.play('right');
         }
-        else if (this.cursors.up.isDown)
-        {
+        else if (this.cursors.up.isDown) {
             this.player.body.velocity.y = -100;
             this.player.play('up');
         }
-        else if (this.cursors.down.isDown)
-        {
+        else if (this.cursors.down.isDown) {
             this.player.body.velocity.y = 100;
             this.player.play('down');
         }
-        else
-        {
+        else {
             this.player.animations.stop();
         }
     };
