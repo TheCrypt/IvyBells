@@ -7,9 +7,13 @@ var Entity = (function () {
         this.components = {};
     }
 
-
+    Entity.prototype.setName = function(name) {
+        this.name = name;
+        return this;
+    }
     Entity.prototype.addComponent = function(component) {
         this.components[component.name] = component;
+        return this;
     }
     return Entity;
 })();
