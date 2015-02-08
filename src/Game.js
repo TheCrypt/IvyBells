@@ -17,8 +17,8 @@ var Game = (function () {
 
         this.cursors = phaser.input.keyboard.createCursorKeys();
 
-        phaser.camera.x = 600;
-        phaser.camera.y = 700;
+        phaser.camera.x = 400;
+        phaser.camera.y = 400;
 
 
         this.map = phaser.add.tilemap('map2');
@@ -27,7 +27,7 @@ var Game = (function () {
         this.layer2 = this.map.createLayer('Layer2');
 
 
-        this.player = phaser.add.sprite(900, 900, 'player', 1);
+        this.player = phaser.add.sprite(800, 900, 'player', 1);
         this.player.animations.add('left', [8,9], 10, true);
         this.player.animations.add('right', [1,2], 10, true);
         this.player.animations.add('up', [11,12,13], 10, true);
@@ -59,26 +59,81 @@ var Game = (function () {
         this.marker.lineStyle(2, 0x000000, 1);
         this.marker.drawRect(0, 0, 32, 32);
 
+        this.moveInProgress = 0;
+        this.targetTile = null;
+        this.targetMarker = null;
+        this.pathfinder = phaser.plugins.add(Phaser.Plugin.PathFinderPlugin);
+        this.pathfinder.setGrid(this.map.layers[0].data, [11]);
 
+        this.playerPath = [];
     };
+
+    Game.prototype.findPathTo = function(tilex, tiley) {
+
+        this.pathfinder.setCallbackFunction(function(path) {
+            game.playerPath = path || [];
+            for(var i = 0, ilen = game.playerPath.length; i < ilen; i++) {
+                //game.map.putTile(46, game.playerPath[i].x, game.playerPath[i].y);
+            }
+            game.playerPath = game.playerPath.reverse();
+            game.moveInProgress = 2;
+        });
+
+        this.pathfinder.preparePathCalculation([this.layer1.getTileX(this.player.body.x),this.layer1.getTileX(this.player.body.y)], [tilex,tiley]);
+        this.pathfinder.calculatePath();
+    }
 
     Game.prototype.update = function() {
         var cameraSpeed = 0.5;
         var elapsedTime = phaser.time.elapsed;
-
+        
+        this.player.body.velocity.set(0);
         this.marker.x = this.layer1.getTileX(phaser.input.activePointer.worldX) * 32;
         this.marker.y = this.layer1.getTileY(phaser.input.activePointer.worldY) * 32;
 
-        if (phaser.input.mousePointer.isDown)
-        {
-            if (phaser.input.keyboard.isDown(Phaser.Keyboard.SHIFT))
-            {
-                var currentTile = this.map.getTile(this.layer1.getTileX(this.marker.x), this.layer1.getTileY(this.marker.y));
-                console.log(currentTile);
+        if (this.moveInProgress == 2) {
+            if (this.targetTile == null) {
+                this.targetTile = this.playerPath.pop();
+                console.log('TILE:');
             }
+            if (this.targetTile == null) {
+                this.moveInProgress = 0;
+                this.player.animations.stop();
+                console.log('OK');
+                return;
+            }
+            if (this.targetTile.x < this.layer1.getTileX(this.player.body.x)) {
+                this.player.body.velocity.x = -100;
+                this.player.play('left');
+            }
+            else if (this.targetTile.x  > this.layer1.getTileX(this.player.body.x)) {
+                this.player.body.velocity.x = 100;
+                this.player.play('right');
+            }
+            else if (this.targetTile.y < this.layer1.getTileY(this.player.body.y)) {
+                this.player.body.velocity.y = -100;
+                this.player.play('up');
+            }
+            else if (this.targetTile.y > this.layer1.getTileY(this.player.body.y)) {
+                this.player.body.velocity.y = 100;
+                this.player.play('down');
+            }
+            else {
+                this.targetTile = this.playerPath.pop();
+            }
+            
+
+
+
+        }
+
+        if (phaser.input.mousePointer.isDown && this.moveInProgress == 0)
+        {
+            this.moveInProgress = 1;
+            this.findPathTo(this.layer1.getTileX(this.marker.x), this.layer1.getTileY(this.marker.y));
         }
         // TODO: Linear interpolation
-        this.player.body.velocity.set(0);
+        
 
         if (this.cursors.left.isDown) {
             this.player.body.velocity.x = -100;
