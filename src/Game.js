@@ -40,19 +40,31 @@ var Game = (function () {
 
         var previous_mouse_pos = null;
         var mouse_sensitivity = 30;
-        phaser.input.mouse.onMouseMove = function (evt) {
+
+        var mouseMovedWhileClicked = false;
+        phaser.input.mouse.mouseMoveCallback = function (evt) {
             if (phaser.input.mousePointer.isUp)
                 previous_mouse_pos = null;
             if (phaser.input.mousePointer.isDown) {
+                mouseMovedWhileClicked = true;
                 if (previous_mouse_pos == null)
                     previous_mouse_pos = evt;
                 var dx = evt.x - previous_mouse_pos.x;
                 var dy = evt.y - previous_mouse_pos.y;
                 previous_mouse_pos = evt;
                 phaser.camera.x -= dx * mouse_sensitivity * phaser.time.physicsElapsed;
-                phaser.camera.y -= dy * mouse_sensitivity * phaser.time.physicsElapsed;       
+                phaser.camera.y -= dy * mouse_sensitivity * phaser.time.physicsElapsed;
             }
-
+        }
+        phaser.input.mouse.callbackContext = this;
+        phaser.input.mouse.mouseUpCallback = function() {
+            if (!mouseMovedWhileClicked && this.moveInProgress == 0)
+            {
+                this.moveInProgress = 1;
+                this.findPathTo(this.layer1.getTileX(this.marker.x), this.layer1.getTileY(this.marker.y));
+            } else {
+                mouseMovedWhileClicked = false;
+            }
         };
 
 
@@ -74,7 +86,7 @@ var Game = (function () {
         this.pathfinder.setCallbackFunction(function(path) {
             game.playerPath = path || [];
             for(var i = 0, ilen = game.playerPath.length; i < ilen; i++) {
-                //game.map.putTile(46, game.playerPath[i].x, game.playerPath[i].y);
+                game.map.putTile(46, game.playerPath[i].x, game.playerPath[i].y);
             }
             game.playerPath = game.playerPath.reverse();
             game.moveInProgress = 2;
@@ -95,12 +107,10 @@ var Game = (function () {
         if (this.moveInProgress == 2) {
             if (this.targetTile == null) {
                 this.targetTile = this.playerPath.pop();
-                console.log('TILE:');
             }
             if (this.targetTile == null) {
                 this.moveInProgress = 0;
                 this.player.animations.stop();
-                console.log('OK');
                 return;
             }
             if (this.targetTile.x < this.layer1.getTileX(this.player.body.x)) {
@@ -128,11 +138,6 @@ var Game = (function () {
 
         }
 
-        if (phaser.input.mousePointer.isDown && this.moveInProgress == 0)
-        {
-            this.moveInProgress = 1;
-            this.findPathTo(this.layer1.getTileX(this.marker.x), this.layer1.getTileY(this.marker.y));
-        }
         // TODO: Linear interpolation
         
 
