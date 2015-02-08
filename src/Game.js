@@ -6,16 +6,13 @@
 
 var Game = (function () {
     
-    function Game() {
-        this.cursors;
-
-    }
+    function Game() { }
 
     Game.prototype.initialize = function() {
+        SystemInputSingleton.initialize();
+
         // Define world size
         phaser.world.setBounds(0, 0, 1900, 1900);
-
-        this.cursors = phaser.input.keyboard.createCursorKeys();
 
         phaser.camera.x = 400;
         phaser.camera.y = 400;
@@ -46,37 +43,16 @@ var Game = (function () {
         this.group.add(this.layer2);
 
 
+        SystemInputSingleton.registerClickHandler(function() {
+            this.moveInProgress = 1;
+            this.findPathTo(this.layer1.getTileX(this.marker.x), this.layer1.getTileY(this.marker.y));
+        }, this);
 
-        var previous_mouse_pos = null;
+        SystemInputSingleton.registerHoldHandler(function(dx, dy) {
+            phaser.camera.x -= dx;
+            phaser.camera.y -= dy;
+        });
 
-        var mouseMovedWhileClicked = false;
-        phaser.input.mouse.callbackContext = this;
-        phaser.input.mouse.mouseMoveCallback = function (evt) {
-            if (phaser.input.mousePointer.isUp)
-                previous_mouse_pos = null;
-            if (phaser.input.mousePointer.isDown) {
-                mouseMovedWhileClicked = true;
-                if (previous_mouse_pos == null)
-                    previous_mouse_pos = evt;
-                var dx = evt.x - previous_mouse_pos.x;
-                var dy = evt.y - previous_mouse_pos.y;
-                previous_mouse_pos = evt;
-                phaser.camera.x -= dx;
-                phaser.camera.y -= dy;
-            }
-        };
-        phaser.input.mouse.mouseDownCallback = function() {
-        };
-        phaser.input.mouse.mouseUpCallback = function() {
-            phaser.input.mouse.locked = false;
-            if (!mouseMovedWhileClicked && this.moveInProgress == 0)
-            {
-                this.moveInProgress = 1;
-                this.findPathTo(this.layer1.getTileX(this.marker.x), this.layer1.getTileY(this.marker.y));
-            } else {
-                mouseMovedWhileClicked = false;
-            }
-        };
 
 
         this.marker = phaser.add.graphics();
@@ -93,14 +69,13 @@ var Game = (function () {
     };
 
     Game.prototype.findPathTo = function(tilex, tiley) {
-
         this.pathfinder.setCallbackFunction(function(path) {
             game.playerPath = path || [];
             game.playerPath = game.playerPath.reverse();
             game.moveInProgress = 2;
         });
 
-        this.pathfinder.preparePathCalculation([this.layer1.getTileX(this.player.body.x),this.layer1.getTileX(this.player.body.y)], [tilex,tiley]);
+        this.pathfinder.preparePathCalculation([this.layer1.getTileX(this.player.body.x), this.layer1.getTileX(this.player.body.y)], [tilex, tiley]);
         this.pathfinder.calculatePath();
     }
 
@@ -109,8 +84,10 @@ var Game = (function () {
         var elapsedTime = phaser.time.elapsed;
         
         this.player.body.velocity.set(0);
-        this.marker.x = this.layer1.getTileX(phaser.input.activePointer.worldX) * 32;
-        this.marker.y = this.layer1.getTileY(phaser.input.activePointer.worldY) * 32;
+
+        var mousePos = SystemInputSingleton.getMousePosition();
+        this.marker.x = this.layer1.getTileX(mousePos.worldX) * 32;
+        this.marker.y = this.layer1.getTileY(mousePos.worldY) * 32;
 
         if (this.moveInProgress == 2) {
             if (this.targetTile == null) {
@@ -147,27 +124,12 @@ var Game = (function () {
         }
 
         // TODO: Linear interpolation
-        
+        var xAxis = SystemInputSingleton.getKeyboardXAxis();
+        var yAxis = SystemInputSingleton.getKeyboardYAxis();
+        var cameraSpeed = 10;
+        phaser.camera.x += xAxis * cameraSpeed;
+        phaser.camera.y += yAxis * cameraSpeed;
 
-        if (this.cursors.left.isDown) {
-            this.player.body.velocity.x = -100;
-            this.player.play('left');
-        }
-        else if (this.cursors.right.isDown) {
-            this.player.body.velocity.x = 100;
-            this.player.play('right');
-        }
-        else if (this.cursors.up.isDown) {
-            this.player.body.velocity.y = -100;
-            this.player.play('up');
-        }
-        else if (this.cursors.down.isDown) {
-            this.player.body.velocity.y = 100;
-            this.player.play('down');
-        }
-        else {
-            this.player.animations.stop();
-        }
     };
 
     Game.prototype.render = function() {
