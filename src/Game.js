@@ -41,9 +41,9 @@ var Game = (function () {
         this.player.body.setSize(10, 14, 2, 1);
 
         // Render order
-        this.unitGroup.add(this.layer1);
-        this.unitGroup.add(this.player);
-        this.unitGroup.add(this.layer2);
+        this.group.add(this.layer1);
+        this.group.add(this.player);
+        this.group.add(this.layer2);
 
 
 
