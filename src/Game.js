@@ -94,27 +94,25 @@ var Game = (function () {
         if (this.moveInProgress == 2) {
             if (this.targetTile == null) {
                 this.targetTile = this.playerPath.pop();
-                console.log('TILE:');
             }
             if (this.targetTile == null) {
                 this.moveInProgress = 0;
                 this.player.animations.stop();
-                console.log('OK');
                 return;
             }
-            if (this.targetTile.x < this.layer1.getTileX(this.player.body.x)) {
+            if (this.targetTile.x < this.layer1.getTileX(this.player.body.x + 20)) {
                 this.player.body.velocity.x = -100;
                 this.player.play('left');
             }
-            else if (this.targetTile.x  > this.layer1.getTileX(this.player.body.x)) {
+            else if (this.targetTile.x  > this.layer1.getTileX(this.player.body.x - 10)) {
                 this.player.body.velocity.x = 100;
                 this.player.play('right');
             }
-            else if (this.targetTile.y < this.layer1.getTileY(this.player.body.y)) {
+            else if (this.targetTile.y < this.layer1.getTileY(this.player.body.y + 20)) {
                 this.player.body.velocity.y = -100;
                 this.player.play('up');
             }
-            else if (this.targetTile.y > this.layer1.getTileY(this.player.body.y)) {
+            else if (this.targetTile.y > this.layer1.getTileY(this.player.body.y - 10)) {
                 this.player.body.velocity.y = 100;
                 this.player.play('down');
             }
