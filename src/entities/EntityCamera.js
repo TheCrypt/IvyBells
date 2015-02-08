@@ -3,9 +3,9 @@
  */
 var EntityCamera = (function () {
 
-    function EntityCamera() {
-        this.prototype = Entity.prototype;
-    }
+        function EntityCamera() {
+            this.prototype = Entity.prototype;
+        }
 
-    return EntityCamera;
-})();
+        return EntityCamera;
+    })();

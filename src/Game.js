@@ -43,7 +43,6 @@ var Game = (function () {
         var mouseMovedWhileClicked = false;
         phaser.input.mouse.callbackContext = this;
         phaser.input.mouse.mouseMoveCallback = function (evt) {
-            console.log(evt.x, evt.y);
             if (phaser.input.mousePointer.isUp)
                 previous_mouse_pos = null;
             if (phaser.input.mousePointer.isDown) {
