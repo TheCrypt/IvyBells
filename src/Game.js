@@ -25,6 +25,7 @@ var Game = (function () {
         this.map.addTilesetImage('ground-tileset', 'ground-tileset');
         this.layer1 = this.map.createLayer('Layer1');
         this.layer2 = this.map.createLayer('Layer2');
+        this.layerCollider = this.map.createLayer('Collider'); // 48 == blocked
 
 
         this.player = phaser.add.sprite(800, 900, 'player', 1);
@@ -38,20 +39,35 @@ var Game = (function () {
         this.player.body.setSize(10, 14, 2, 1);
 
         var previous_mouse_pos = null;
-        var mouse_sensitivity = 30;
-        phaser.input.mouse.onMouseMove = function (evt) {
+
+        var mouseMovedWhileClicked = false;
+        phaser.input.mouse.callbackContext = this;
+        phaser.input.mouse.mouseMoveCallback = function (evt) {
+            console.log(evt.x, evt.y);
             if (phaser.input.mousePointer.isUp)
                 previous_mouse_pos = null;
             if (phaser.input.mousePointer.isDown) {
+                mouseMovedWhileClicked = true;
                 if (previous_mouse_pos == null)
                     previous_mouse_pos = evt;
                 var dx = evt.x - previous_mouse_pos.x;
                 var dy = evt.y - previous_mouse_pos.y;
                 previous_mouse_pos = evt;
-                phaser.camera.x -= dx * mouse_sensitivity * phaser.time.physicsElapsed;
-                phaser.camera.y -= dy * mouse_sensitivity * phaser.time.physicsElapsed;       
+                phaser.camera.x -= dx;
+                phaser.camera.y -= dy;
             }
-
+        };
+        phaser.input.mouse.mouseDownCallback = function() {
+        };
+        phaser.input.mouse.mouseUpCallback = function() {
+            phaser.input.mouse.locked = false;
+            if (!mouseMovedWhileClicked && this.moveInProgress == 0)
+            {
+                this.moveInProgress = 1;
+                this.findPathTo(this.layer1.getTileX(this.marker.x), this.layer1.getTileY(this.marker.y));
+            } else {
+                mouseMovedWhileClicked = false;
+            }
         };
 
 
@@ -73,7 +89,7 @@ var Game = (function () {
         this.pathfinder.setCallbackFunction(function(path) {
             game.playerPath = path || [];
             for(var i = 0, ilen = game.playerPath.length; i < ilen; i++) {
-                //game.map.putTile(46, game.playerPath[i].x, game.playerPath[i].y);
+                game.map.putTile(46, game.playerPath[i].x, game.playerPath[i].y);
             }
             game.playerPath = game.playerPath.reverse();
             game.moveInProgress = 2;
@@ -125,11 +141,6 @@ var Game = (function () {
 
         }
 
-        if (phaser.input.mousePointer.isDown && this.moveInProgress == 0)
-        {
-            this.moveInProgress = 1;
-            this.findPathTo(this.layer1.getTileX(this.marker.x), this.layer1.getTileY(this.marker.y));
-        }
         // TODO: Linear interpolation
         
 
