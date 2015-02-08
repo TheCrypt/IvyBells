@@ -55,12 +55,29 @@ var Game = (function () {
 
         };
 
+
+        this.marker = phaser.add.graphics();
+        this.marker.lineStyle(2, 0x000000, 1);
+        this.marker.drawRect(0, 0, 32, 32);
+
+
     };
 
     Game.prototype.update = function() {
         var cameraSpeed = 0.5;
         var elapsedTime = phaser.time.elapsed;
 
+        this.marker.x = this.layer1.getTileX(phaser.input.activePointer.worldX) * 32;
+        this.marker.y = this.layer1.getTileY(phaser.input.activePointer.worldY) * 32;
+
+        if (phaser.input.mousePointer.isDown)
+        {
+            if (phaser.input.keyboard.isDown(Phaser.Keyboard.SHIFT))
+            {
+                var currentTile = this.map.getTile(this.layer1.getTileX(this.marker.x), this.layer1.getTileY(this.marker.y));
+                console.log(currentTile);
+            }
+        }
         // TODO: Linear interpolation
         this.player.body.velocity.set(0);
 
@@ -89,6 +106,7 @@ var Game = (function () {
 
     };
 
+    Game.prototype.type = "Game";
     return Game;
 })();
 
