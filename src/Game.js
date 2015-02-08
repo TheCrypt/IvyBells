@@ -26,7 +26,7 @@ var Game = (function () {
         this.layer1 = this.map.createLayer('Layer1');
         this.layer2 = this.map.createLayer('Layer2');
         this.layerCollider = this.map.createLayer('Collider'); // 48 == blocked
-
+        this.layerCollider.visible = false;
 
         this.player = phaser.add.sprite(800, 900, 'player', 1);
         this.player.animations.add('left', [8,9], 10, true);
@@ -79,7 +79,7 @@ var Game = (function () {
         this.targetTile = null;
         this.targetMarker = null;
         this.pathfinder = phaser.plugins.add(Phaser.Plugin.PathFinderPlugin);
-        this.pathfinder.setGrid(this.map.layers[0].data, [11]);
+        this.pathfinder.setGrid(this.map.layers[2].data, [-1]);
 
         this.playerPath = [];
     };
@@ -88,9 +88,6 @@ var Game = (function () {
 
         this.pathfinder.setCallbackFunction(function(path) {
             game.playerPath = path || [];
-            for(var i = 0, ilen = game.playerPath.length; i < ilen; i++) {
-                game.map.putTile(46, game.playerPath[i].x, game.playerPath[i].y);
-            }
             game.playerPath = game.playerPath.reverse();
             game.moveInProgress = 2;
         });
