@@ -4,6 +4,7 @@
 var EntityPlayer = (function () {
 
     function EntityPlayer() {
+    	
     }
 
     return EntityPlayer;
