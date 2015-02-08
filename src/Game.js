@@ -28,6 +28,8 @@ var Game = (function () {
         this.layerCollider = this.map.createLayer('Collider'); // 48 == blocked
         this.layerCollider.visible = false;
 
+        this.group = phaser.add.group(undefined, "General");
+
         this.player = phaser.add.sprite(800, 900, 'player', 1);
         this.player.animations.add('left', [8,9], 10, true);
         this.player.animations.add('right', [1,2], 10, true);
@@ -37,6 +39,13 @@ var Game = (function () {
         phaser.physics.enable(this.player, Phaser.Physics.ARCADE);
 
         this.player.body.setSize(10, 14, 2, 1);
+
+        // Render order
+        this.unitGroup.add(this.layer1);
+        this.unitGroup.add(this.player);
+        this.unitGroup.add(this.layer2);
+
+
 
         var previous_mouse_pos = null;
 
