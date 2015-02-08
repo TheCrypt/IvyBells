@@ -4,7 +4,7 @@
 var EntityCamera = (function () {
 
     function EntityCamera() {
-        this.components = {};
+        this.prototype = Entity.prototype;
     }
 
     return EntityCamera;
