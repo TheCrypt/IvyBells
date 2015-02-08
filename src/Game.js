@@ -25,6 +25,7 @@ var Game = (function () {
         this.map.addTilesetImage('ground-tileset', 'ground-tileset');
         this.layer1 = this.map.createLayer('Layer1');
         this.layer2 = this.map.createLayer('Layer2');
+        this.layerCollider = this.map.createLayer('Collider'); // 48 == blocked
 
 
         this.player = phaser.add.sprite(900, 900, 'player', 1);
