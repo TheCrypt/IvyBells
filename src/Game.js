@@ -39,10 +39,11 @@ var Game = (function () {
         this.player.body.setSize(10, 14, 2, 1);
 
         var previous_mouse_pos = null;
-        var mouse_sensitivity = 30;
 
         var mouseMovedWhileClicked = false;
+        phaser.input.mouse.callbackContext = this;
         phaser.input.mouse.mouseMoveCallback = function (evt) {
+            console.log(evt.x, evt.y);
             if (phaser.input.mousePointer.isUp)
                 previous_mouse_pos = null;
             if (phaser.input.mousePointer.isDown) {
@@ -52,12 +53,14 @@ var Game = (function () {
                 var dx = evt.x - previous_mouse_pos.x;
                 var dy = evt.y - previous_mouse_pos.y;
                 previous_mouse_pos = evt;
-                phaser.camera.x -= dx * mouse_sensitivity * phaser.time.physicsElapsed;
-                phaser.camera.y -= dy * mouse_sensitivity * phaser.time.physicsElapsed;
+                phaser.camera.x -= dx;
+                phaser.camera.y -= dy;
             }
-        }
-        phaser.input.mouse.callbackContext = this;
+        };
+        phaser.input.mouse.mouseDownCallback = function() {
+        };
         phaser.input.mouse.mouseUpCallback = function() {
+            phaser.input.mouse.locked = false;
             if (!mouseMovedWhileClicked && this.moveInProgress == 0)
             {
                 this.moveInProgress = 1;
